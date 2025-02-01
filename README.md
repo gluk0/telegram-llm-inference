@@ -23,15 +23,13 @@ To run the bot:
 
 Structure: 
 ----------
-📦 telegram-llm-inference
-┣ 📂 src
-┃ ┣ 📂 bot
-┃ ┃ ┗ 📜 telegram_bot.py
-┃ ┣ 📂 config
-┃ ┃ ┗ 📜 settings.py
-┃ ┗ 📜 main.py
-┣ 📜 .env
-┣ 📜 .gitignore
-┣ 📜 PROJECT.txt
-┣ 📜 README.md
-┗ 📜 requirements.txt
+```
+├── src/
+│ ├── bot/
+│ │ └── telegram_bot.py
+│ ├── config/
+│ │ └── settings.py
+│ └── main.py
+├── requirements.txt
+└── README.md
+```
