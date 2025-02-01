@@ -6,6 +6,7 @@ load_dotenv()
 
 # Bot settings
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+MORALIS_API_KEY = os.getenv("MORALIS_API_KEY")
 
 # Logging settings
 LOGGING_CONFIG = {
