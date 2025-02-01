@@ -5,22 +5,24 @@ from telegram.ext import (
     CommandHandler,
     ContextTypes,
 )
-from src.data.wallet import WalletHistory
+from src.data.wallet import WalletHistoryFetcher
 
 logger = logging.getLogger(__name__)
 
 class TelegramBot:
     """Class to handle Telegram bot functionality."""
     
-    def __init__(self, token: str):
+    def __init__(self, telegram_token: str, moralis_token: str):
         """Initialize the Telegram bot.
         
         Args:
-            token: Telegram bot token
+            telegram_token: Telegram bot token
+            moralis_token: Moralis API token
         """
-        self.token = token
+        self.telegram_token = telegram_token
+        self.moralis_token = moralis_token
         self.application = None
-        self.wallet_history = WalletHistory()
+        self.wallet_history = WalletHistoryFetcher(moralis_token)
         
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Handle the /start command.
@@ -46,8 +48,9 @@ class TelegramBot:
         logger.info("User %s asked a wallet query", user.first_name)
         
         try:
-            # Fetch wallet history
-            history = await self.wallet_history.fetch_history()
+            wallet_address = "0xaD9e0d62f3945899eDf58050d27b077D6DBBd3Ba"
+            
+            history = await self.wallet_history.get_wallet_history(wallet_address)
             
             if not history:
                 await update.message.reply_text(
@@ -56,7 +59,7 @@ class TelegramBot:
                 return
             
             # Format the wallet history into a readable message
-            message = "📊 Your Wallet History:\n\n"
+            message = f"📊  Wallet History for {wallet_address[:6]}...{wallet_address[-4:]}:\n\n"
             for transaction in history:
                 message += f"💰 Amount: {transaction['amount']}\n"
                 message += f"📅 Date: {transaction['date']}\n"
@@ -73,7 +76,7 @@ class TelegramBot:
 
     def setup(self) -> None:
         """Set up the bot with handlers."""
-        self.application = Application.builder().token(self.token).build()
+        self.application = Application.builder().token(self.telegram_token).build()
         self.application.add_handler(CommandHandler("start", self.start))
         self.application.add_handler(CommandHandler("wallet", self.wallet))
 
